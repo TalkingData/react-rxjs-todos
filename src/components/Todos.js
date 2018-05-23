@@ -1,7 +1,7 @@
 import React, { Component} from 'react';
 
 // import todoService from '../services/todoService';
-import todoService from '../services/todo';
+import todoService from '../service/todo';
 
 import TodoHeader from './TodoHeader';
 import TodoList from './TodoList';
