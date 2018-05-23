@@ -15,9 +15,9 @@ import 'todomvc-app-css/index.css';
 const App = () => (
   <div>
     <Router>
-      <Route exact path="/" render={() => <Redirect to="/react-rxjs-todos/" />} />
+      <Route exact path="/" render={() => <Redirect to="/rxloop-react-todos/" />} />
     </Router>
-    <Router basename="/react-rxjs-todos/">
+    <Router basename="/rxloop-react-todos/">
       <div>
         <Route exact path="/" component={Todos} />
         <Route exact path="/:filter" component={Todos} />

@@ -1,6 +1,7 @@
 import React, { Component} from 'react';
 
-import todoService from '../services/todoService';
+// import todoService from '../services/todoService';
+import todoService from '../services/todo';
 
 import TodoHeader from './TodoHeader';
 import TodoList from './TodoList';
@@ -14,7 +15,9 @@ class Todos extends Component {
 
   componentDidMount() {
     this.todos$ = todoService.todos$
-        .subscribe(todos => this.setState({ todos: todos }));
+        .subscribe(data => {
+          this.setState({ todos: data.todos });
+        });
   }
 
   componentWillUnmount() {
@@ -24,7 +27,7 @@ class Todos extends Component {
   getVisibleTodos() {
     const { filter } = this.props.match.params;
     const { todos } = this.state;
-    
+
     switch (filter) {
       case 'active':
         return todos.filter(todo => !todo.completed);

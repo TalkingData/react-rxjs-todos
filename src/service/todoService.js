@@ -1,10 +1,5 @@
-import 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
-import 'rxjs/add/operator/scan';
-import 'rxjs/add/operator/publishReplay';
-import 'rxjs/add/operator/map';
+import { Subject, BehaviorSubject } from 'rxjs';
+import { scan, publishReplay, map, refCount } from 'rxjs/operators';
 
 import Todo from '../models/todoModel';
 
@@ -32,46 +27,60 @@ class TodoService {
 
 
     this.todos$ = this.update$
-        .scan((todos, operation) => operation(todos), initialTodos)
-        .publishReplay(1)
-        .refCount();
+      .pipe(
+        scan((todos, operation) => operation(todos), initialTodos),
+        publishReplay(1),
+        refCount(),
+      );
     
     this.todos$.forEach(todos => localStorage.setItem('react-rxjs-todos', JSON.stringify(todos)));
   
     this.create$
-        .map(todo => todos => todos.concat(todo))
+    .pipe(
+        map(todo => todos => todos.concat(todo)),
+    )
         .subscribe(this.update$);
     
     this.modify$
-        .map(({ uuid, newTitle }) => todos => {
-          const targetTodo = todos.find(todo => todo.id === uuid);
-          targetTodo.title = newTitle;
-          return todos;
-        })
-        .subscribe(this.update$);
+    .pipe(
+        map(({ uuid, newTitle }) => todos => {
+            const targetTodo = todos.find(todo => todo.id === uuid);
+            targetTodo.title = newTitle;
+            return todos;
+          }),
+    )
+    .subscribe(this.update$);
     
     this.remove$
-        .map(uuid => todos => todos.filter(todo => todo.id !== uuid))
-        .subscribe(this.update$);
+    .pipe(
+        map(uuid => todos => todos.filter(todo => todo.id !== uuid))
+    )
+    .subscribe(this.update$);
     
     this.removeCompleted$
-        .map(() => todos => todos.filter(todo => !todo.completed))
-        .subscribe(this.update$);
+    .pipe(
+        map(() => todos => todos.filter(todo => !todo.completed)),
+    )
+    .subscribe(this.update$);
     
     this.toggle$
-        .map(uuid => todos => {
-          const targetTodo = todos.find(todo => todo.id === uuid);
-          targetTodo.completed = !targetTodo.completed;
-          return todos;
-        })
-        .subscribe(this.update$);
+    .pipe(
+        map(uuid => todos => {
+            const targetTodo = todos.find(todo => todo.id === uuid);
+            targetTodo.completed = !targetTodo.completed;
+            return todos;
+        }),
+    )
+    .subscribe(this.update$);
     
     this.toggleAll$
-        .map(completed => todos => {
-          todos.forEach(todo => todo.completed = completed);
-          return todos;
-        })
-        .subscribe(this.update$);
+    .pipe(
+        map(completed => todos => {
+            todos.forEach(todo => todo.completed = completed);
+            return todos;
+        }),
+    ) 
+    .subscribe(this.update$);
 
     this.createTodo$
         .subscribe(this.create$);
@@ -116,7 +125,6 @@ class TodoService {
   update(uuid, newTitle) {
     this.modifyTodo$.next({ uuid, newTitle });
   }
-
 }
 
 export default new TodoService();
