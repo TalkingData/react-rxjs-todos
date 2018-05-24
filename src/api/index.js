@@ -1,3 +1,5 @@
+import { remove, find } from 'lodash-es';
+
 const db = {
   save(todos) {
     localStorage.setItem('rxloop-react-todos', JSON.stringify(todos))
@@ -17,4 +19,11 @@ export const createApi = async (todo) => {
   list.push(todo);
   db.save(list);
   return todo;
+};
+
+export const removeApi = async (uuid) => {
+  const list = db.findAll();
+  remove(list, (todo) => todo.id === uuid);
+  db.save(list);
+  return { uuid };
 };

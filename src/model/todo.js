@@ -1,7 +1,7 @@
 import { Observable, from } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import { remove, find } from 'lodash-es';
-import { getListApi, createApi } from '../api';
+import { getListApi, createApi, removeApi } from '../api';
 
 export default {
   name: 'todos',
@@ -105,20 +105,39 @@ export default {
       );
     },
     modifyTodo(action$) {
-      return action$;
-    },
-    removeTodo(action$) {
       return action$.pipe(
         map(data => {
           return {
-            type: 'remove',
+            type: 'modify',
             uuid: data.payload,
           };
         }),
       );
     },
+    removeTodo(action$) {
+      return action$.pipe(
+        switchMap((data) => {
+          return from(
+            removeApi(data.uuid),
+          );
+        }),
+        map(data => {
+          console.log(data);
+          return {
+            type: 'remove',
+            uuid: data.uuid,
+          };
+        }),
+      );
+    },
     removeCompletedTodos(action$) {
-      return action$;
+      return action$.pipe(
+        map(data => {
+          return {
+            type: 'removeCompleted',
+          };
+        }),
+      );
     },
     toggleTodo(action$) {
       return action$;

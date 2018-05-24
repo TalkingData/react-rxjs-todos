@@ -25,7 +25,7 @@ class TodoService {
   remove(uuid) {
     app.dispatch({
       type: 'todos/removeTodo',
-      payload: uuid,
+      uuid,
     });
   }
 
