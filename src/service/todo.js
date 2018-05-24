@@ -43,16 +43,17 @@ class TodoService {
   }
 
   toggleAll(completed) {
+    console.log(completed);
     app.dispatch({
       type: 'todos/toggleAll',
       payload: completed,
     });
   }
 
-  update(uuid, newTitle) {
+  update(uuid, title) {
     app.dispatch({
       type: 'todos/modifyTodo',
-      payload: { uuid, newTitle },
+      payload: { uuid, title },
     });
   }
 }

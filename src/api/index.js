@@ -42,3 +42,18 @@ export const toggleApi = async (uuid) => {
   db.save(list);
   return { uuid };
 };
+
+export const toggleAllApi = async (completed) => {
+  const list = db.findAll();
+  list.forEach(todo => todo.completed = completed);
+  db.save(list);
+  return {};
+};
+
+export const modifyApi = async ({ uuid, title }) => {
+  const list = db.findAll();
+  const todo = find(list, todo => todo.id === uuid);
+  todo.title = title;
+  db.save(list);
+  return { uuid, title };
+};

@@ -1,7 +1,15 @@
 import { Observable, from } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import { remove, find } from 'lodash-es';
-import { getListApi, createApi, removeApi, removeCompletedApi, toggleApi } from '../api';
+import {
+  getListApi,
+  createApi,
+  removeApi,
+  removeCompletedApi,
+  toggleApi,
+  toggleAllApi,
+  modifyApi,
+} from '../api';
 
 export default {
   name: 'todos',
@@ -25,8 +33,8 @@ export default {
     },
     modify(state, action) {
       const todos = [ ...state.todos ];
-      const todo = find(todos, todo => todo.id === action.uuid);
-      todo.title = action.title;
+      const todo = find(todos, todo => todo.id === action.data.uuid);
+      todo.title = action.data.title;
 
       return {
         ...state,
@@ -63,7 +71,7 @@ export default {
     },
     toggleAll(state, action) {
       const todos = [ ...state.todos ];
-      todos.forEach(todo => todo.completed = action.completed);
+      todos.forEach(todo => todo.completed = action.payload.completed);
 
       return {
         ...state,
@@ -106,10 +114,21 @@ export default {
     },
     modifyTodo(action$) {
       return action$.pipe(
+        switchMap((data) => {
+          return from(
+            modifyApi({
+              uuid: data.payload.uuid,
+              title: data.payload.title,
+            }),
+          );
+        }),
         map(data => {
           return {
             type: 'modify',
-            uuid: data.payload,
+            data: {
+              uuid: data.uuid,
+              title: data.title,
+            },
           };
         }),
       );
@@ -160,7 +179,19 @@ export default {
       );
     },
     toggleAllTodos(action$) {
-      return action$;
+      return action$.pipe(
+        switchMap((data) => {
+          return from(
+            toggleAllApi(data.payload),
+          );
+        }),
+        map((data) => {
+          return {
+            type: 'toggleAll',
+            payload: data.payload,
+          }
+        }),
+      );
     },
   },
 };
