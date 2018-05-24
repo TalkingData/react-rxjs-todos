@@ -1,4 +1,5 @@
 import React, { Component} from 'react';
+import { takeWhile } from 'rxjs/operators';
 
 // import todoService from '../services/todoService';
 import todoService from '../service/todo';
@@ -14,14 +15,20 @@ class Todos extends Component {
   }
 
   componentDidMount() {
-    this.todos$ = todoService.todos$
+    this.alive = true;
+    // this.subscription = 
+    todoService.todos$
+        .pipe(
+          takeWhile(() => this.alive),
+        )
         .subscribe(data => {
           this.setState({ todos: data.todos });
         });
   }
 
   componentWillUnmount() {
-    this.todos$.unsubscribe();
+    // this.subscription.unsubscribe();
+    this.alive = false;
   }
 
   getVisibleTodos() {
