@@ -27,3 +27,18 @@ export const removeApi = async (uuid) => {
   db.save(list);
   return { uuid };
 };
+
+export const removeCompletedApi = async () => {
+  const list = db.findAll();
+  remove(list, item => item.completed);
+  db.save(list);
+  return {};
+};
+
+export const toggleApi = async (uuid) => {
+  const list = db.findAll();
+  const todo = find(list, todo => todo.id === uuid);
+  todo.completed = !todo.completed;
+  db.save(list);
+  return { uuid };
+};

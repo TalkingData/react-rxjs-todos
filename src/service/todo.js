@@ -37,7 +37,7 @@ class TodoService {
 
   toggle(uuid) {
     app.dispatch({
-      type: 'todos/toggle',
+      type: 'todos/toggleTodo',
       uuid,
     });
   }
