@@ -1,6 +1,6 @@
 {
-  "name": "react-rxjs-todos",
-  "version": "0.1.0",
+  "name": "rxloop-react-todos",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "classnames": "^2.2.5",
@@ -26,5 +26,5 @@
     "publish": "./publish.sh",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "https://rxjs-cn.github.io/react-rxjs-todos/"
+  "homepage": "https://talkingdata.github.io/rxloop-react-todos/"
 }
