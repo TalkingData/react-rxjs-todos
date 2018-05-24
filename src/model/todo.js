@@ -141,7 +141,6 @@ export default {
           );
         }),
         map(data => {
-          console.log(data);
           return {
             type: 'remove',
             uuid: data.uuid,

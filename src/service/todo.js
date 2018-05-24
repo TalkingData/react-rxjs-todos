@@ -43,7 +43,6 @@ class TodoService {
   }
 
   toggleAll(completed) {
-    console.log(completed);
     app.dispatch({
       type: 'todos/toggleAll',
       payload: completed,
