@@ -1,12 +1,8 @@
 import React, { Component} from 'react';
-import { takeWhile } from 'rxjs/operators';
-
-// import todoService from '../services/todoService';
-import todoService from '../service/todo';
-
 import TodoHeader from './TodoHeader';
 import TodoList from './TodoList';
 import TodoFooter from './TodoFooter';
+import withLoop from '../with-rxloop';
 
 class Todos extends Component {
   
@@ -15,20 +11,10 @@ class Todos extends Component {
   }
 
   componentDidMount() {
-    this.alive = true;
-    // this.subscription = 
-    todoService.todos$
-        .pipe(
-          takeWhile(() => this.alive),
-        )
-        .subscribe(data => {
-          this.setState({ todos: data.todos });
-        });
-  }
-
-  componentWillUnmount() {
-    // this.subscription.unsubscribe();
-    this.alive = false;
+    const { source } = this.props;
+    source.subscribe(data => {
+      this.setState({ todos: data.todos });
+    });
   }
 
   getVisibleTodos() {
@@ -46,27 +32,33 @@ class Todos extends Component {
   }
 
   handleAdd(title) {
-    todoService.add(title);
+    const { service } = this.props;
+    service.add(title);
   }
 
   handleRemove(uuid) {
-    todoService.remove(uuid);
+    const { service } = this.props;
+    service.remove(uuid);
   }
 
   handleRemoveCompleted() {
-    todoService.removeCompleted();
+    const { service } = this.props;
+    service.removeCompleted();
   }
 
   handleToggle(uuid) {
-    todoService.toggle(uuid);
+    const { service } = this.props;
+    service.toggle(uuid);
   }
 
   handleToggleAll(event) {
-    todoService.toggleAll(event.target.checked);
+    const { service } = this.props;
+    service.toggleAll(event.target.checked);
   }
 
   handleUpdate(uuid, newTitle) {
-    todoService.update(uuid, newTitle);
+    const { service } = this.props;
+    service.update(uuid, newTitle);
   }
 
   render() {
@@ -107,4 +99,4 @@ class Todos extends Component {
   }
 }
 
-export default Todos;
+export default withLoop(Todos);
