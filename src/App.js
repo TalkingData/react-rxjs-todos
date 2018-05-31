@@ -18,9 +18,6 @@ import 'todomvc-app-css/index.css';
 const app = rxLoop();
 app.model(todoModel);
 
-const Test = withLoop(app, Todos);
-
-
 const App = () => (
   <div>
     <Router>
@@ -28,8 +25,8 @@ const App = () => (
     </Router>
     <Router basename="/">
       <div>
-        <Route exact path="/" component={Test} />
-        <Route exact path="/:filter" component={Test} />
+        <Route exact path="/" component={withLoop(app, Todos)} />
+        <Route exact path="/:filter" component={withLoop(app, Todos)} />
       </div>
     </Router>
   </div>
