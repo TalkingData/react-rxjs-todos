@@ -2,7 +2,7 @@ import React, { Component} from 'react';
 import TodoHeader from './TodoHeader';
 import TodoList from './TodoList';
 import TodoFooter from './TodoFooter';
-import withLoop from '../with-rxloop';
+import Todo from '../entity/todoModel';
 
 class Todos extends Component {
   
@@ -11,9 +11,12 @@ class Todos extends Component {
   }
 
   componentDidMount() {
-    const { source } = this.props;
-    source.subscribe(data => {
+    const { streams, dispatch } = this.props;
+    streams.todos$.subscribe(data => {
       this.setState({ todos: data.todos });
+    });
+    dispatch({
+      type: 'todos/getList',
     });
   }
 
@@ -32,33 +35,50 @@ class Todos extends Component {
   }
 
   handleAdd(title) {
-    const { service } = this.props;
-    service.add(title);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'todos/createTodo',
+      payload: new Todo(title),
+    });
   }
 
   handleRemove(uuid) {
-    const { service } = this.props;
-    service.remove(uuid);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'todos/removeTodo',
+      uuid,
+    });
   }
 
   handleRemoveCompleted() {
-    const { service } = this.props;
-    service.removeCompleted();
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'todos/removeCompletedTodos',
+    });
   }
 
   handleToggle(uuid) {
-    const { service } = this.props;
-    service.toggle(uuid);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'todos/toggleTodo',
+      uuid,
+    });
   }
 
   handleToggleAll(event) {
-    const { service } = this.props;
-    service.toggleAll(event.target.checked);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'todos/toggleAll',
+      payload: event.target.checked,
+    });
   }
 
-  handleUpdate(uuid, newTitle) {
-    const { service } = this.props;
-    service.update(uuid, newTitle);
+  handleUpdate(uuid, title) {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'todos/modifyTodo',
+      payload: { uuid, title },
+    });
   }
 
   render() {
@@ -99,4 +119,4 @@ class Todos extends Component {
   }
 }
 
-export default withLoop(Todos);
+export default Todos;

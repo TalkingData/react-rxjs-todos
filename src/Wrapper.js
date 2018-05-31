@@ -1,19 +1,32 @@
 import React, { Component } from 'react';
 import { takeWhile } from 'rxjs/operators';
-import service from './service/todo';
 
 class Wrapper extends Component {
 
   state = {
-    source: null,
+    streams: {
+      isMounted: false,
+    },
   }
 
   componentDidMount() {
+    const { app } = this.props;
+    const streams = {};
     this.alive = true;
-    this.setState({
-      source: service.todos$.pipe(
+
+    Object.keys(app)
+    .filter((item) => /\$$/.test(item))
+    .forEach(item => {
+      streams[item] = app[item].pipe(
         takeWhile(() => this.alive),
-      ),
+      );
+    });
+
+    this.setState({
+      streams: {
+        isMounted: true,
+        ...streams,
+      },
     });
   }
 
@@ -22,13 +35,14 @@ class Wrapper extends Component {
   }
 
   render() {
-    const { render } = this.props;
+    const { render, app } = this.props;
     return (
       <React.Fragment>
         {
-          this.state.source ? render({
-            service,
-            source: this.state.source,
+          this.state.streams.isMounted ? render({
+            app,
+            dispatch: app.dispatch,
+            streams: this.state.streams,
           }): null
         }
       </React.Fragment>

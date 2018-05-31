@@ -20,7 +20,7 @@ export default {
     list(state, action) {
       return {
         ...state,
-        todos: [ ...state.todos, ...action.todos ],
+        todos: [ ...action.todos ],
       };
     },
     create(state, action) {

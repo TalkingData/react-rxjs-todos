@@ -6,11 +6,12 @@ import Wrapper from "./Wrapper";
 /**
  * A public higher-order component to access the imperative API
  */
-const withLoop = Component => {
+const withLoop = (app, Component) => {
   const C = props => {
     const { wrappedComponentRef, ...remainingProps } = props;
     return (
       <Wrapper
+        app={app}
         render={props => {
           return (
             <Component
@@ -24,7 +25,7 @@ const withLoop = Component => {
     );
   };
 
-  C.displayName = `withRouter(${Component.displayName || Component.name})`;
+  C.displayName = `withRxLoop(${Component.displayName || Component.name})`;
   C.WrappedComponent = Component;
   C.propTypes = {
     wrappedComponentRef: PropTypes.func
