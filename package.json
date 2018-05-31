@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@rxloop/react": "0.0.2",
     "classnames": "^2.2.5",
     "hoist-non-react-statics": "^2.5.0",
     "lodash-es": "^4.17.10",

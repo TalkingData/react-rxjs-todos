@@ -4,10 +4,10 @@ import {
   Route,
   Redirect
 } from 'react-router-dom';
+import rxLoop from 'rxloop';
+import withRxLoop from '@rxloop/react';
 
 import Todos from './components/Todos';
-import rxLoop from 'rxloop';
-import withLoop from './with-rxloop';
 import todoModel from './model/todo';
 
 // todomvc styles
@@ -25,8 +25,8 @@ const App = () => (
     </Router>
     <Router basename="/">
       <div>
-        <Route exact path="/" component={withLoop(app, Todos)} />
-        <Route exact path="/:filter" component={withLoop(app, Todos)} />
+        <Route exact path="/" component={withRxLoop(app, Todos)} />
+        <Route exact path="/:filter" component={withRxLoop(app, Todos)} />
       </div>
     </Router>
   </div>
