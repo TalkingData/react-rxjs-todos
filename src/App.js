@@ -4,7 +4,7 @@ import {
   Route,
   Redirect
 } from 'react-router-dom';
-import rxLoop from 'rxloop';
+import rxLoop from '@rxloop/core';
 import withRxLoop from '@rxloop/react';
 
 import Todos from './components/Todos';
